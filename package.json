@@ -11,8 +11,9 @@
     "hono": "^4.12.25"
   },
   "devDependencies": {
-    "@types/node": "^20.11.17",
-    "tsx": "^4.7.1",
-    "typescript": "^5.8.3"
+    "@types/node": "^25.9.2",
+    "oxfmt": "^0.54.0",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
   }
 }
