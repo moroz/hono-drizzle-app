@@ -1,3 +1,14 @@
 [tools]
+"go:github.com/pressly/goose/v3/cmd/goose" = "latest"
 node = "26"
 oxfmt = "latest"
+
+
+[env]
+PGTZ = "UTC"
+PGDATABASE = "duongondro_dev"
+DATABASE_URL = "postgres://postgres:postgres@localhost:5432/{{ env.PGDATABASE }}?options=-c%20TimeZone%3DUTC"
+
+GOOSE_DBSTRING = "{{ env.DATABASE_URL }}"
+GOOSE_DRIVER = "postgres"
+GOOSE_MIGRATION_DIR = "src/db/migrations"

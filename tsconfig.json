@@ -10,7 +10,9 @@
     "jsxImportSource": "hono/jsx",
     "outDir": "./dist",
     "lib": ["esnext", "esnext.temporal"],
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true
   },
   "exclude": ["node_modules"]
 }
