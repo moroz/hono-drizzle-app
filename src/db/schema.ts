@@ -11,6 +11,18 @@ export const citext = customType<{ data: string }>({
   },
 });
 
+export const timestamp = customType<{ data: Temporal.Instant; driverData: string }>({
+  dataType() {
+    return "timestamp with time zone";
+  },
+  fromDriver(value) {
+    return Temporal.PlainDateTime.from(value).toZonedDateTime("UTC").toInstant();
+  },
+  toDriver(value) {
+    return value.toJSON();
+  },
+});
+
 export const usersTable = pgTable("users", {
   id: p
     .uuid()
@@ -19,6 +31,8 @@ export const usersTable = pgTable("users", {
   email: citext().unique().notNull(),
   passwordHash: p.varchar({ length: 255 }),
   displayName: p.varchar({ length: 255 }).notNull(),
-  insertedAt: p.timestamp().defaultNow().notNull(),
-  updatedAt: p.timestamp().defaultNow().notNull(),
+  insertedAt: timestamp().notNull(),
+  updatedAt: timestamp().notNull(),
 });
+
+export type User = typeof usersTable.$inferSelect;

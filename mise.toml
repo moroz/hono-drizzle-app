@@ -12,3 +12,12 @@ DATABASE_URL = "postgres://postgres:postgres@localhost:5432/{{ env.PGDATABASE }}
 GOOSE_DBSTRING = "{{ env.DATABASE_URL }}"
 GOOSE_DRIVER = "postgres"
 GOOSE_MIGRATION_DIR = "src/db/migrations"
+
+[tasks."db:seed"]
+run = """
+#!/usr/bin/env -S bash -euo pipefail
+
+for file in src/db/seeds/*.sql; do
+  psql $DATABASE_URL -f $file
+done
+"""

@@ -4,7 +4,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { UserController } from "./controllers/user-controller.ts";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
-import type { DbContext } from "./db/schema/schema.ts";
+import type { DbContext } from "./db/schema.ts";
 
 const db: DbContext = drizzle({ connection: process.env.DATABASE_URL!, casing: "snake_case" });
 
