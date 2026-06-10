@@ -9,7 +9,8 @@
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
     "outDir": "./dist",
-    "lib": ["esnext", "esnext.temporal"]
+    "lib": ["esnext", "esnext.temporal"],
+    "rootDir": "./src"
   },
   "exclude": ["node_modules"]
 }
