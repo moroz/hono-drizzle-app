@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "tsgo",
     "start": "node dist/index.js"
   },
   "dependencies": {
@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.9.2",
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
     "oxfmt": "^0.54.0",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3"
