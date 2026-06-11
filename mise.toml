@@ -2,6 +2,7 @@
 "go:github.com/pressly/goose/v3/cmd/goose" = "latest"
 node = "26"
 oxfmt = "latest"
+pnpm = "11"
 
 [env]
 PGTZ = "UTC"
@@ -11,6 +12,9 @@ DATABASE_URL = "postgres://postgres:postgres@localhost:5432/{{ env.PGDATABASE }}
 GOOSE_DBSTRING = "{{ env.DATABASE_URL }}"
 GOOSE_DRIVER = "postgres"
 GOOSE_MIGRATION_DIR = "src/db/migrations"
+
+# openssl rand -base64 64 | tr -d '\n'
+SECRET_KEY_BASE = "N/PzP+Ed0ptrkx+bLG+M7b1PV/sqtYu4tbRv605IfyxAeeyeQoVdEciYo6hfgoDlZhkHLCfBkOnl/iKEcreDVg=="
 
 [tasks."db:seed"]
 run = """

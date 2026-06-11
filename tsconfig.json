@@ -11,10 +11,12 @@
     "outDir": "./dist",
     "lib": ["esnext", "esnext.temporal"],
     "rootDir": "./src",
-    "allowImportingTsExtensions": true,
-    "rewriteRelativeImportExtensions": true,
     "paths": {
+      "@schemata": ["./src/schemata/index.js"],
+      "@config": ["./src/config/config.js"],
+      "@services": ["./src/services/index.js"],
       "@controllers/*": ["./src/controllers/*"],
+      "@db/*": ["./src/db/*"],
       "@/*": ["./src/*"]
     }
   },

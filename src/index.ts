@@ -5,21 +5,25 @@ import { UserController } from "@controllers/user-controller.js";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import type { DbContext } from "./db/schema.ts";
+import { SessionController } from "@controllers/session-controller.js";
+import { DATABASE_URL } from "@config";
 
-const db: DbContext = drizzle({ connection: process.env.DATABASE_URL!, casing: "snake_case" });
+const db: DbContext = drizzle({ connection: DATABASE_URL, casing: "snake_case" });
 
 const app = new Hono();
 
 app.use(logger());
 app.use(cors());
 
-const users = UserController(db);
-
 app.get("/", (c) => {
   return c.text("Hello Hono!");
 });
 
-app.route("/api/v1/users", users);
+const userController = UserController(db);
+app.route("/api/v1/users", userController);
+
+const sessionController = SessionController(db);
+app.route("/api/v1/sessions", sessionController);
 
 serve(
   {

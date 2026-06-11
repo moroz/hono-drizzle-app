@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { type DbContext } from "../db/schema.ts";
+import { type DbContext } from "@db/schema.js";
 import { UserRepository } from "@/repositories/user-repository.js";
 
 export function UserController(db: DbContext) {

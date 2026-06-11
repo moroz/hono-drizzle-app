@@ -26,5 +26,6 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile --prod
 
 COPY --from=build /app/dist/ ./
+COPY src/db/migrations ./db/migrations/
 
 CMD ["node", "./index.js"]
