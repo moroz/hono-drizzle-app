@@ -3,7 +3,6 @@
 node = "26"
 oxfmt = "latest"
 
-
 [env]
 PGTZ = "UTC"
 PGDATABASE = "duongondro_dev"
@@ -20,4 +19,37 @@ run = """
 for file in src/db/seeds/*.sql; do
   psql $DATABASE_URL -f $file
 done
+"""
+
+[tasks."db:setup"]
+run = """
+#!/usr/bin/env -S bash -euo pipefail
+
+mise db:create
+goose up
+mise db:seed
+"""
+
+[tasks."db:create"]
+run = """
+#!/usr/bin/env -S bash -euo pipefail
+
+db_exists="$(psql --csv -t postgres postgres -c "select exists (select from pg_database where datname = '$PGDATABASE')")"
+
+if [[ $db_exists = f ]]; then
+  createdb
+fi
+"""
+
+[tasks."db:reset"]
+run = """
+#!/usr/bin/env -S bash -euo pipefail
+
+db_exists="$(psql --csv -t postgres postgres -c "select exists (select from pg_database where datname = '$PGDATABASE')")"
+
+if [[ $db_exists = t ]]; then
+  dropdb $PGDATABASE
+fi
+
+mise db:setup
 """

@@ -1,6 +1,6 @@
 import { Hono } from "hono";
-import { type DbContext, usersTable } from "../db/schema.ts";
-import UserRepository from "../repositories/user-repository.ts";
+import { type DbContext } from "../db/schema.ts";
+import { UserRepository } from "@/repositories/user-repository.js";
 
 export function UserController(db: DbContext) {
   const handler = new Hono();

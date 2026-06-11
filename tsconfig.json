@@ -12,7 +12,11 @@
     "lib": ["esnext", "esnext.temporal"],
     "rootDir": "./src",
     "allowImportingTsExtensions": true,
-    "rewriteRelativeImportExtensions": true
+    "rewriteRelativeImportExtensions": true,
+    "paths": {
+      "@controllers/*": ["./src/controllers/*"],
+      "@/*": ["./src/*"]
+    }
   },
   "exclude": ["node_modules"]
 }
