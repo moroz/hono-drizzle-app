@@ -1,4 +1,4 @@
-import * as crypto from "node:crypto";
+import { deriveEd25519KeyPair } from "@/config/keys.js";
 
 function MustGetenv(key: string) {
   const value = process.env[key];
@@ -20,45 +20,6 @@ function MustGetenvBase64(key: string) {
   return Uint8Array.from(buf);
 }
 
-async function DeriveKey(baseKey: CryptoKey, salt: Uint8Array, info: string, bitLength: number) {
-  const bits = await crypto.subtle.deriveBits(
-    {
-      name: "HKDF",
-      hash: "SHA-512",
-      salt: Uint8Array.from(salt),
-      info: new TextEncoder().encode(info),
-    },
-    baseKey,
-    bitLength,
-  );
-
-  return new Uint8Array(bits);
-}
-
-async function DeriveEd25519SigningKey(seed: Uint8Array) {
-  const pkcs8 = new Uint8Array([
-    0x30,
-    0x2e,
-    0x02,
-    0x01,
-    0x00,
-    0x30,
-    0x05,
-    0x06,
-    0x03,
-    0x2b,
-    0x65,
-    0x70,
-    0x04,
-    0x22,
-    0x04,
-    0x20,
-    ...seed,
-  ]);
-
-  return crypto.subtle.importKey("pkcs8", pkcs8, "Ed25519", false, ["sign"]);
-}
-
 export const DATABASE_URL = MustGetenv("DATABASE_URL");
 
 const HKDF_SALT = Uint8Array.from(
@@ -67,11 +28,13 @@ const HKDF_SALT = Uint8Array.from(
     "base64",
   ),
 );
-export const SECRET_KEY_BASE = MustGetenvBase64("SECRET_KEY_BASE");
-const HKDF_KEY_BASE = await crypto.subtle.importKey("raw", SECRET_KEY_BASE, "HKDF", false, [
-  "deriveBits",
-]);
-export const JWT_SIGNING_KEY = await DeriveEd25519SigningKey(
-  await DeriveKey(HKDF_KEY_BASE, HKDF_SALT, "JWT signer", 32 * 8),
+const SECRET_KEY_BASE = MustGetenvBase64("SECRET_KEY_BASE");
+
+const { publicKey, privateKey } = await deriveEd25519KeyPair(
+  SECRET_KEY_BASE,
+  HKDF_SALT,
+  "JWT signer",
 );
-export const JWT_VERIFYING_KEY = JWT_SIGNING_KEY;
+
+export const JWT_VERIFYING_KEY = publicKey;
+export const JWT_SIGNING_KEY = privateKey;
