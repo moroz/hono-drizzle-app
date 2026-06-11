@@ -1,5 +1,3 @@
-export interface JwtClaims {
+export interface JwtSigningClaims {
   sub: string;
-  iat: number;
-  exp: number;
 }

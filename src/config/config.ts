@@ -36,5 +36,5 @@ const { publicKey, privateKey } = await deriveEd25519KeyPair(
   "JWT signer",
 );
 
-export const JWT_VERIFYING_KEY = publicKey;
 export const JWT_SIGNING_KEY = privateKey;
+export const JWT_VERIFYING_KEY = publicKey;

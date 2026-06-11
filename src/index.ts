@@ -6,7 +6,7 @@ import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import type { DbContext } from "./db/schema.ts";
 import { SessionController } from "@controllers/session-controller.js";
-import { DATABASE_URL } from "@config";
+import { DATABASE_URL, JWT_VERIFYING_KEY } from "@config";
 
 const db: DbContext = drizzle({ connection: DATABASE_URL, casing: "snake_case" });
 
@@ -17,6 +17,11 @@ app.use(cors());
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");
+});
+
+app.get("/.well-known/jwks.json", async (c) => {
+  const jwk = await crypto.subtle.exportKey("jwk", JWT_VERIFYING_KEY);
+  return c.json({ keys: [jwk] });
 });
 
 const userController = UserController(db);

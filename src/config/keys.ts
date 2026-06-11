@@ -26,11 +26,13 @@ export async function deriveEd25519KeyPair(masterKey: Uint8Array, salt: Uint8Arr
   );
 
   const seed = new Uint8Array(bits);
-  const publicKey = ed25519.getPublicKey(seed);
+  const publicKeyBytes = ed25519.getPublicKey(seed);
 
   const pkcs8 = new Uint8Array([...Ed25519PrivateKeyPKCS8Envelope, ...seed]);
+  const spki = new Uint8Array([...Ed25519PublicKeySPKIEnvelope, ...publicKeyBytes]);
 
   const privateKey = await crypto.subtle.importKey("pkcs8", pkcs8, "Ed25519", false, ["sign"]);
+  const publicKey = await crypto.subtle.importKey("spki", spki, "Ed25519", true, ["verify"]);
 
   return { publicKey, privateKey };
 }
