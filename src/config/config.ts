@@ -3,8 +3,7 @@ import { deriveEd25519KeyPair } from "@/config/keys.js";
 export function MustGetenv(key: string) {
   const value = process.env[key];
   if (!value) {
-    console.error(`FATAL: Environment variable ${key} is not set!`);
-    process.exit(1);
+    throw new Error(`FATAL: Environment variable ${key} is not set!`);
   }
   return value;
 }
