@@ -1,4 +1,4 @@
-import { type DbContext, type User, usersTable } from "../db/schema.ts";
+import { type DbContext, type User, usersTable } from "@db/schema.js";
 import { eq } from "drizzle-orm";
 
 export class UserRepository {

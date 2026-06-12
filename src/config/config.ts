@@ -1,6 +1,6 @@
 import { deriveEd25519KeyPair } from "@/config/keys.js";
 
-function MustGetenv(key: string) {
+export function MustGetenv(key: string) {
   const value = process.env[key];
   if (!value) {
     console.error(`FATAL: Environment variable ${key} is not set!`);
@@ -20,15 +20,11 @@ function MustGetenvBase64(key: string) {
   return Uint8Array.from(buf);
 }
 
-export const DATABASE_URL = MustGetenv("DATABASE_URL");
-
-const HKDF_SALT = Uint8Array.from(
-  Buffer.from(
-    "WjqyS5ug93YZVto3N8xQtRxIJNAI4zb1VOuHFxcQgbZJz3uQne5WWj9BOPiJ+Gta49BYB5C22+Bo3SGFiFSZ1g==",
-    "base64",
-  ),
-);
 const SECRET_KEY_BASE = MustGetenvBase64("SECRET_KEY_BASE");
+const HKDF_SALT = Buffer.from(
+  "WjqyS5ug93YZVto3N8xQtRxIJNAI4zb1VOuHFxcQgbZJz3uQne5WWj9BOPiJ+Gta49BYB5C22+Bo3SGFiFSZ1g==",
+  "base64",
+);
 
 const { publicKey, privateKey } = await deriveEd25519KeyPair(
   SECRET_KEY_BASE,
@@ -38,3 +34,5 @@ const { publicKey, privateKey } = await deriveEd25519KeyPair(
 
 export const JWT_SIGNING_KEY = privateKey;
 export const JWT_VERIFYING_KEY = publicKey;
+
+export const DATABASE_URL = MustGetenv("DATABASE_URL");

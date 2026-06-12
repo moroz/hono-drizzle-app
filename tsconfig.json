@@ -13,7 +13,8 @@
     "rootDir": "./src",
     "paths": {
       "@schemata": ["./src/schemata/index.js"],
-      "@config": ["./src/config/config.js"],
+      "@dto": ["./src/dto/index.js"],
+      "@config": ["./src/config/index.js"],
       "@services": ["./src/services/index.js"],
       "@controllers/*": ["./src/controllers/*"],
       "@db/*": ["./src/db/*"],

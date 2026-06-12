@@ -7,7 +7,9 @@ pnpm = "11"
 [env]
 PGTZ = "UTC"
 PGDATABASE = "duongondro_dev"
+TEST_DATABASE = "duongondro_test"
 DATABASE_URL = "postgres://postgres:postgres@localhost:5432/{{ env.PGDATABASE }}?options=-c%20TimeZone%3DUTC"
+TEST_DATABASE_URL = "postgres://postgres:postgres@localhost:5432/{{ env.TEST_DATABASE }}?options=-c%20TimeZone%3DUTC"
 
 GOOSE_DBSTRING = "{{ env.DATABASE_URL }}"
 GOOSE_DRIVER = "postgres"
@@ -38,7 +40,7 @@ mise db:seed
 run = """
 #!/usr/bin/env -S bash -euo pipefail
 
-db_exists="$(psql --csv -t postgres postgres -c "select exists (select from pg_database where datname = '$PGDATABASE')")"
+db_exists="$(psql --csv -t -d postgres -c "select exists (select from pg_database where datname = '$PGDATABASE')")"
 
 if [[ $db_exists = f ]]; then
   createdb
@@ -49,7 +51,7 @@ fi
 run = """
 #!/usr/bin/env -S bash -euo pipefail
 
-db_exists="$(psql --csv -t postgres postgres -c "select exists (select from pg_database where datname = '$PGDATABASE')")"
+db_exists="$(psql --csv -t -d postgres -c "select exists (select from pg_database where datname = '$PGDATABASE')")"
 
 if [[ $db_exists = t ]]; then
   dropdb $PGDATABASE
@@ -57,3 +59,19 @@ fi
 
 mise db:setup
 """
+
+[tasks."db:test:prepare"]
+run = """
+#!/usr/bin/env -S bash -euo pipefail
+
+db_exists="$(psql --csv -t -d postgres -c "select exists (select from pg_database where datname = '$TEST_DATABASE')")"
+
+if [[ $db_exists = f ]]; then
+  createdb $TEST_DATABASE
+fi
+env GOOSE_DBSTRING="$TEST_DATABASE_URL" goose up
+"""
+
+[tasks.test]
+depends = "db:test:prepare"
+run = "pnpm test"

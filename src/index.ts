@@ -7,28 +7,11 @@ import { cors } from "hono/cors";
 import type { DbContext } from "./db/schema.ts";
 import { SessionController } from "@controllers/session-controller.js";
 import { DATABASE_URL, JWT_VERIFYING_KEY } from "@config";
+import { App } from "@controllers/router.js";
 
 const db: DbContext = drizzle({ connection: DATABASE_URL, casing: "snake_case" });
 
-const app = new Hono();
-
-app.use(logger());
-app.use(cors());
-
-app.get("/", (c) => {
-  return c.text("Hello Hono!");
-});
-
-app.get("/.well-known/jwks.json", async (c) => {
-  const jwk = await crypto.subtle.exportKey("jwk", JWT_VERIFYING_KEY);
-  return c.json({ keys: [jwk] });
-});
-
-const userController = UserController(db);
-app.route("/api/v1/users", userController);
-
-const sessionController = SessionController(db);
-app.route("/api/v1/sessions", sessionController);
+const app = App(db);
 
 serve(
   {
