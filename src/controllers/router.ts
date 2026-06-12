@@ -9,7 +9,9 @@ import { JWT_VERIFYING_KEY } from "@config";
 export function App(dbContext: DbContext) {
   const app = new Hono();
 
-  app.use(logger());
+  if (process.env.NODE_ENV !== "test") {
+    app.use(logger());
+  }
   app.use(cors());
 
   app.get("/", (c) => {

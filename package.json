@@ -27,6 +27,7 @@
     "drizzle-kit": "^0.31.10",
     "fishery": "^2.4.0",
     "oxfmt": "^0.54.0",
+    "set-cookie-parser": "^3.1.0",
     "tsc-alias": "^1.8.17",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
