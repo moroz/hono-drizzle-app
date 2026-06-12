@@ -5,6 +5,7 @@ import { Hono } from "hono";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import { JWT_VERIFYING_KEY } from "@config";
+import { fetchUser } from "@/middleware/index.js";
 
 export function App(dbContext: DbContext) {
   const app = new Hono();
@@ -13,6 +14,8 @@ export function App(dbContext: DbContext) {
     app.use(logger());
   }
   app.use(cors());
+
+  app.use(fetchUser(dbContext));
 
   app.get("/", (c) => {
     return c.text("Hello Hono!");

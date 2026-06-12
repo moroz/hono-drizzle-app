@@ -1,6 +1,6 @@
 import type { JwtSigningClaims } from "@/types/jwt.js";
 import * as jose from "jose";
-import { JWT_SIGNING_KEY } from "@/config/config.js";
+import { JWT_SIGNING_KEY, JWT_VERIFYING_KEY } from "@/config/config.js";
 import type { User } from "@db/schema.js";
 
 export function signToken(payload: JwtSigningClaims): Promise<string> {
@@ -15,6 +15,16 @@ export function issueTokenForUser(user: User): Promise<string> {
   return signToken({
     sub: user.id,
   });
+}
+
+export async function verifyToken(token: string) {
+  try {
+    const { payload } = await jose.jwtVerify(token, JWT_VERIFYING_KEY, {});
+    return payload;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
 }
 
 export function peekExpirationTime(token: string): Temporal.Instant {

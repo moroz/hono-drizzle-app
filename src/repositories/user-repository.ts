@@ -8,12 +8,21 @@ export class UserRepository {
     return this.dbContext.select().from(usersTable).orderBy(usersTable.id);
   }
 
+  async getUserById(id: string): Promise<User | null> {
+    const [user] = await this.dbContext
+      .select()
+      .from(usersTable)
+      .where(eq(usersTable.id, id))
+      .limit(1);
+    return user ?? null;
+  }
+
   async getUserByEmail(email: string): Promise<User | null> {
-    const rows = await this.dbContext
+    const [user] = await this.dbContext
       .select()
       .from(usersTable)
       .where(eq(usersTable.email, email))
       .limit(1);
-    return rows[0] ?? null;
+    return user ?? null;
   }
 }
