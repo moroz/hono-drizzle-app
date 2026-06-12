@@ -31,8 +31,8 @@ export const usersTable = pgTable("users", {
   email: citext().unique().notNull(),
   passwordHash: p.varchar({ length: 255 }),
   displayName: p.varchar({ length: 255 }).notNull(),
-  insertedAt: timestamp().notNull(),
-  updatedAt: timestamp().notNull(),
+  insertedAt: timestamp().notNull().default(sql`now()`),
+  updatedAt: timestamp().notNull().default(sql`now()`),
 });
 
 export type User = typeof usersTable.$inferSelect;

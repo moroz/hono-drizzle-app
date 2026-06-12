@@ -16,6 +16,7 @@
     "hono": "^4.12.25",
     "jose": "^6.2.3",
     "pg": "^8.21.0",
+    "uuid": "^14.0.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -24,6 +25,7 @@
     "@typescript/native-preview": "7.0.0-dev.20260421.2",
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
+    "fishery": "^2.4.0",
     "oxfmt": "^0.54.0",
     "tsc-alias": "^1.8.17",
     "tsx": "^4.22.4",
