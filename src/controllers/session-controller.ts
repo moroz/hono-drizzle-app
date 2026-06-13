@@ -6,6 +6,7 @@ import { CreateSessionSchema } from "@schemata";
 import { ACCESS_TOKEN_COOKIE } from "@config";
 import { setCookie } from "hono/cookie";
 import { UserDto } from "@dto";
+import { problemDetails } from "@/http/problem-details.js";
 
 export function SessionController(dbContext: DbContext) {
   const handler = new Hono();
@@ -15,16 +16,11 @@ export function SessionController(dbContext: DbContext) {
     const params = c.req.valid("json");
     const user = await userService.authenticateUserByEmailPassword(params.email, params.password);
     if (!user) {
-      return c.json(
-        {
-          type: "about:blank", // RFC 9457
-          title: "Unauthorized",
-          status: 401,
-          detail: "Invalid email or password.",
-        },
-        401,
-        { "Content-Type": "application/problem+json" },
-      );
+      return problemDetails(c, {
+        title: "Unauthorized",
+        status: 401,
+        detail: "Invalid email or password.",
+      });
     }
 
     const token = await issueTokenForUser(user);

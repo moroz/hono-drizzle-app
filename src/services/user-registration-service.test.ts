@@ -5,6 +5,7 @@ import { MustGetenv } from "@config";
 import { userFactory } from "@/test/factories/users.js";
 import { verifyPassword } from "@services";
 import type { User } from "@db/schema.js";
+import { UniqueConstraintViolationError } from "@/errors/index.js";
 
 describe(UserRegistrationService, () => {
   let dbContext = drizzle({ connection: MustGetenv("TEST_DATABASE_URL"), casing: "snake_case" });
@@ -32,16 +33,12 @@ describe(UserRegistrationService, () => {
       const existing = await userFactory.create({}, { transient: { db: dbContext } });
       expect(existing).not.toBeNull();
 
-      try {
-        const user = await service.createUserRegistration({
-          email: existing.email,
-          displayName: "Invalid",
-          password: "foobar2000",
-        });
-        expect(user).toBeNull();
-      } catch (e) {
-        console.error(e);
-      }
+      const promise = service.createUserRegistration({
+        email: existing.email,
+        displayName: "Invalid",
+        password: "foobar2000",
+      });
+      await expect(promise).rejects.toThrow(UniqueConstraintViolationError);
     });
   });
 });

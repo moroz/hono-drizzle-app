@@ -19,8 +19,8 @@ export class UserRegistrationService {
         .returning();
       return user;
     } catch (e: any) {
-      if (isUniqueViolation(e)) {
-        throw new UniqueConstraintViolationError(e);
+      if (isUniqueViolation(e, "users_email_key")) {
+        throw new UniqueConstraintViolationError(e, "email");
       }
       throw e;
     }

@@ -1,15 +1,14 @@
 import type { DrizzleQueryError } from "drizzle-orm";
-import type { DatabaseError } from "pg";
 
-export class UniqueConstraintViolationError {
-  column: string | null = null;
-  cause: DrizzleQueryError;
+export class UniqueConstraintViolationError extends Error {
+  declare cause: DrizzleQueryError;
 
-  constructor(e: DrizzleQueryError) {
-    this.cause = e;
-    const dbError = e.cause as DatabaseError;
-    if (dbError.column) {
-      this.column = dbError.column;
-    }
+  constructor(
+    cause: DrizzleQueryError,
+    readonly column: string,
+  ) {
+    super(`Unique constraint violation on "${column}"`, { cause });
+    this.name = "UniqueConstraintViolationError";
+    Error.captureStackTrace?.(this, UniqueConstraintViolationError);
   }
 }
