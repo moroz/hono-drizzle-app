@@ -5,4 +5,6 @@ import { MustGetenv } from "@config";
 
 describe(UserRegistrationService, () => {
   let db = drizzle({ connection: MustGetenv("TEST_DATABASE_URL"), casing: "snake_case" });
+
+  describe("createUserRegistration", async () => {});
 });

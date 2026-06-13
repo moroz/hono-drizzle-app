@@ -1,17 +1,22 @@
 import type { DbContext } from "@db/schema.js";
 import { Hono } from "hono";
-import { UserService } from "@services";
 import { zValidator } from "@hono/zod-validator";
-import { CreateUserRegistrationSchema } from "@/schemata/index.js";
+import { CreateUserRegistrationSchema, UserRegistrationInput } from "@schemata";
+import { UserRegistrationService } from "@services";
 
 export function UserRegistrationController(dbContext: DbContext) {
   const handler = new Hono();
-  const userService = new UserService(dbContext);
+  const userRegistrationService = new UserRegistrationService(dbContext);
 
   handler.post(
     "/api/v1/user-registrations",
     zValidator("json", CreateUserRegistrationSchema),
-    async (c) => {},
+    async (c) => {
+      const params = c.req.valid("json");
+      const user = await userRegistrationService.createUserRegistration(
+        UserRegistrationInput.from(params),
+      );
+    },
   );
 
   return handler;

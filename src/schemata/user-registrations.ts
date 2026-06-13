@@ -13,3 +13,19 @@ export const CreateUserRegistrationSchema = z
   });
 
 export type CreateUserRegistrationParams = z.infer<typeof CreateUserRegistrationSchema>;
+
+export class UserRegistrationInput {
+  static from(params: CreateUserRegistrationParams): UserRegistrationInput {
+    return {
+      email: params.email,
+      displayName: params.displayName,
+      password: params.password,
+    };
+  }
+
+  private constructor(
+    readonly email: string,
+    readonly displayName: string,
+    readonly password: string,
+  ) {}
+}
