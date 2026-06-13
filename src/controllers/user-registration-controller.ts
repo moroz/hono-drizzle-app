@@ -1,6 +1,6 @@
 import type { DbContext } from "@db/schema.js";
 import { Hono } from "hono";
-import { UserService } from "@/services/index.js";
+import { UserService } from "@services";
 import { zValidator } from "@hono/zod-validator";
 import { CreateUserRegistrationSchema } from "@/schemata/index.js";
 

@@ -1,6 +1,6 @@
 import type { DbContext, User } from "@db/schema.js";
 import { UserRepository } from "@/repositories/user-repository.js";
-import argon2 from "argon2";
+import { verifyPassword } from "@/services/password-service.js";
 import { verifyToken } from "@/services/token-service.js";
 
 export class UserService {
@@ -15,7 +15,7 @@ export class UserService {
     if (!user?.passwordHash) return null;
 
     try {
-      if (await argon2.verify(user.passwordHash, password)) {
+      if (await verifyPassword(user.passwordHash, password)) {
         return user;
       }
     } catch (e) {
