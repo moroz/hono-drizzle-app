@@ -11,26 +11,22 @@ export function UserRegistrationController(dbContext: DbContext) {
   const handler = new Hono();
   const userRegistrationService = new UserRegistrationService(dbContext);
 
-  handler.post(
-    "/api/v1/user_registrations",
-    jsonValidator(CreateUserRegistrationSchema),
-    async (c) => {
-      try {
-        const params = c.req.valid("json");
-        const user = await userRegistrationService.createUserRegistration(
-          UserRegistrationInput.from(params),
-        );
-        return c.json({ data: UserDto.from(user) }, 201);
-      } catch (e) {
-        if (e instanceof UniqueConstraintViolationError) {
-          return validationProblem(c, [
-            { detail: "has already been taken", pointer: `#/${e.column}` },
-          ]);
-        }
-        throw e;
+  handler.post("/", jsonValidator(CreateUserRegistrationSchema), async (c) => {
+    try {
+      const params = c.req.valid("json");
+      const user = await userRegistrationService.createUserRegistration(
+        UserRegistrationInput.from(params),
+      );
+      return c.json({ data: UserDto.from(user) }, 201);
+    } catch (e) {
+      if (e instanceof UniqueConstraintViolationError) {
+        return validationProblem(c, [
+          { detail: "has already been taken", pointer: `#/${e.column}` },
+        ]);
       }
-    },
-  );
+      throw e;
+    }
+  });
 
   return handler;
 }

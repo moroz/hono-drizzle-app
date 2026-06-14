@@ -28,13 +28,14 @@ export function App(dbContext: DbContext) {
   });
 
   const userController = UserController(dbContext);
-  app.route("/", userController);
+  app.route("/api/v1/users", userController);
 
   const sessionController = SessionController(dbContext);
-  app.route("/", sessionController);
+  // Contains both singular and plural routes
+  app.route("/api/v1", sessionController);
 
   const userRegistrations = UserRegistrationController(dbContext);
-  app.route("/", userRegistrations);
+  app.route("/api/v1/user_registrations", userRegistrations);
 
   return app;
 }
