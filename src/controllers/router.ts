@@ -6,6 +6,7 @@ import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import { JWT_VERIFYING_KEY } from "@config";
 import { fetchUser } from "@/middleware/index.js";
+import { UserRegistrationController } from "@controllers/user-registration-controller.js";
 
 export function App(dbContext: DbContext) {
   const app = new Hono();
@@ -27,10 +28,13 @@ export function App(dbContext: DbContext) {
   });
 
   const userController = UserController(dbContext);
-  app.route("/api/v1/users", userController);
+  app.route("/", userController);
 
   const sessionController = SessionController(dbContext);
-  app.route("/api/v1/sessions", sessionController);
+  app.route("/", sessionController);
+
+  const userRegistrations = UserRegistrationController(dbContext);
+  app.route("/", userRegistrations);
 
   return app;
 }

@@ -12,7 +12,7 @@ export function UserRegistrationController(dbContext: DbContext) {
   const userRegistrationService = new UserRegistrationService(dbContext);
 
   handler.post(
-    "/api/v1/user-registrations",
+    "/api/v1/user_registrations",
     jsonValidator(CreateUserRegistrationSchema),
     async (c) => {
       try {

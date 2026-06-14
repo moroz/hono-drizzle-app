@@ -3,7 +3,11 @@ import { sql } from "drizzle-orm";
 import * as p from "drizzle-orm/pg-core";
 import { pgTable, customType } from "drizzle-orm/pg-core";
 
-export type DbContext = ReturnType<typeof drizzle>;
+export function DbContext(connectionString: string) {
+  return drizzle({ connection: connectionString, casing: "snake_case" });
+}
+
+export type DbContext = ReturnType<typeof DbContext>;
 
 export const citext = customType<{ data: string }>({
   dataType() {
@@ -31,8 +35,12 @@ export const usersTable = pgTable("users", {
   email: citext().unique().notNull(),
   passwordHash: p.varchar({ length: 255 }),
   displayName: p.varchar({ length: 255 }).notNull(),
-  insertedAt: timestamp().notNull().default(sql`now()`),
-  updatedAt: timestamp().notNull().default(sql`now()`),
+  insertedAt: timestamp()
+    .notNull()
+    .default(sql`now()`),
+  updatedAt: timestamp()
+    .notNull()
+    .default(sql`now()`),
 });
 
 export type User = typeof usersTable.$inferSelect;

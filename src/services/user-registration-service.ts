@@ -12,7 +12,7 @@ export class UserRegistrationService {
       const [user] = await this.dbContext
         .insert(usersTable)
         .values({
-          email: params.email,
+          email: params.email.toLowerCase(),
           displayName: params.displayName,
           passwordHash: await hashPassword(params.password),
         })

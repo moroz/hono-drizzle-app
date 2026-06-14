@@ -6,7 +6,7 @@ export function UserController(db: DbContext) {
   const handler = new Hono();
   const userRepository = new UserRepository(db);
 
-  handler.get("/", async (c) => {
+  handler.get("/api/v1/users", async (c) => {
     const users = await userRepository.listUsers();
     return c.json({ data: users });
   });

@@ -6,6 +6,13 @@ import { randomBytes } from "node:crypto";
 
 type TransientDeps = { db: DbContext; password?: string };
 
+export const VALID_PASSWORD = "Foobar2000!";
+
+export function uniqueEmail() {
+  const rand = randomBytes(3).toHex();
+  return `user-${rand}@example.com`;
+}
+
 export const userFactory = Factory.define<User, TransientDeps>(({ onCreate, transientParams }) => {
   onCreate(async (user) => {
     const passwordHash = await argon2.hash(transientParams.password ?? "foobar", {
@@ -25,12 +32,10 @@ export const userFactory = Factory.define<User, TransientDeps>(({ onCreate, tran
     return inserted;
   });
 
-  const rand = randomBytes(3).toHex();
-
   return {
     id: uuidv7(),
     displayName: "Example User",
-    email: `user-${rand}@example.com`,
+    email: uniqueEmail(),
     passwordHash: "",
     insertedAt: Temporal.Now.instant(),
     updatedAt: Temporal.Now.instant(),
